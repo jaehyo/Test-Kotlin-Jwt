@@ -1,4 +1,4 @@
-
+package com.example.test.demo
 
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.Authentication
