@@ -1,4 +1,4 @@
-
+package com.example.test.demo
 
 import javax.persistence.MappedSuperclass
 import javax.persistence.EntityListeners
