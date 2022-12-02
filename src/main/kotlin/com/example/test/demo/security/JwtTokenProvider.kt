@@ -2,8 +2,10 @@ package com.example.test.demo
 
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Component
+import org.springframework.web.filter.GenericFilterBean
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -13,6 +15,9 @@ import io.jsonwebtoken.Jwts;
 import java.util.Base64
 import java.util.Date
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+import javax.servlet.FilterChain
 
 @Component
 class JwtTokenProvider(private val userDetailsService : UserDetailsService )
@@ -49,6 +54,7 @@ class JwtTokenProvider(private val userDetailsService : UserDetailsService )
 
     // 토큰에서 회원 정보 추출
     fun getUserPk(token: String): String {
+        
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
     }
 
@@ -65,5 +71,18 @@ class JwtTokenProvider(private val userDetailsService : UserDetailsService )
         } catch (e: Exception) {
             false
         }
+    }
+}
+
+class JwtAuthenticationFilter( val jwtTokenProvider : JwtTokenProvider ) : GenericFilterBean(){
+    override fun doFilter( request : ServletRequest , response : ServletResponse , chain : FilterChain )
+    {
+        val token : String? = jwtTokenProvider.resolveToken(request as HttpServletRequest)
+
+        if ( token != null && jwtTokenProvider.validateToken(token) ){
+            val authentication = jwtTokenProvider.getAuthentication(token)
+            SecurityContextHolder.getContext().authentication = authentication
+        }
+        chain.doFilter(request, response)
     }
 }
