@@ -17,10 +17,10 @@ class UserService ( private val userRepository : UserRepository , private val pa
 
     fun registUser( userRegDto : UserRegDto ) : UserRegDto
     {
-        var user = User( userRegDto.name , userRegDto.email ,  passwordEncoder.encode(userRegDto.password)  )
+        var user = User( userRegDto.name?:"" , userRegDto.email?:"" ,  passwordEncoder.encode(userRegDto.password)  )
 
         userRepository.save(user)
 
-        return UserRegDto( userRegDto.name , userRegDto.email )
+        return UserRegDto( userRegDto.name?:"" , userRegDto.email?:"" )
     }
 }

@@ -60,3 +60,14 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.register("bootRun dev"){
+	group = "application"
+	description="dev profile"
+	doFirst {
+		tasks.bootRun.configure {
+			systemProperty("spring.profiles.active" , "dev")
+		}
+	}
+	finalizedBy("bootRun")
+}

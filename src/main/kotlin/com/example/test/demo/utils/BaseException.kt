@@ -10,7 +10,7 @@ enum class BaseResponseCode( status : HttpStatus , message : String ){
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST , "사용자를 찾을 수 없습니다." ),
     FAILED_TO_SAVE_USER(HttpStatus.BAD_REQUEST , "사용자를 등록에 실패했습니다." ),
     
-    OK( HttpStatus.OK , "요청 성공" )
+    OK( HttpStatus.OK , "요청 성공" );
 
     public val status : HttpStatus = status
 
